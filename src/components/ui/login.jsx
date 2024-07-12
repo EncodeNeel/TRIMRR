@@ -12,6 +12,9 @@ import { BeatLoader } from "react-spinners";
 import Error from "./error";
 import { useState, useEffect } from "react";
 import * as Yup from "yup";
+import useFetch from "@/hooks/use-fetch";
+import { login } from "@/db/apiAuth";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email("Invalid Email").required("Email is Required"),
@@ -26,6 +29,10 @@ const Login = () => {
     email: "",
     password: "",
   });
+
+  const navigate = useNavigate();
+  let [searchParams] = useSearchParams();
+  const longLink = searchParams.get("createNew");
 
   useEffect(() => {
     const validate = async () => {
@@ -52,11 +59,20 @@ const Login = () => {
     }));
   };
 
+  const { data, error, loading, fn: fnLogin } = useFetch(login, formData);
+
+  useEffect(() => {
+    if (error === null && data) {
+      navigate(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
+    }
+  }, [data, error]);
+
   const handleLogin = async () => {
     try {
       await validationSchema.validate(formData, { abortEarly: false });
       setErrors({});
       // api call
+      await fnLogin();
     } catch (error) {
       const newErrors = {};
       error.inner.forEach((err) => {
@@ -73,6 +89,7 @@ const Login = () => {
         <CardDescription>
           to your account if you already have one
         </CardDescription>
+        {error && <Error message={error.message} />}
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="space-y-1">
@@ -96,7 +113,7 @@ const Login = () => {
       </CardContent>
       <CardFooter>
         <Button onClick={handleLogin}>
-          {true ? <BeatLoader size={10} color="#36d7b7" /> : "Login"}
+          {loading ? <BeatLoader size={10} color="#36d7b7" /> : "Login"}
         </Button>
       </CardFooter>
     </Card>
