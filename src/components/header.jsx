@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Link2Icon, LinkIcon, LogOut } from "lucide-react";
+import { LinkIcon, LogOut } from "lucide-react";
 import { UrlState } from "@/context";
 import useFetch from "@/hooks/use-fetch";
 import { logout } from "@/db/apiAuth";
