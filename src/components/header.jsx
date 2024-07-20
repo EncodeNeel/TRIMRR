@@ -24,7 +24,7 @@ const Header = () => {
 
   useEffect(() => {
     fetchUser();
-  }, [fetchUser]);
+  }, []);
 
   const handleLogout = async () => {
     await fnLogout();
