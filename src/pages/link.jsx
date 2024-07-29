@@ -1,13 +1,28 @@
+import { Button } from "@/components/ui/button";
 import { UrlState } from "@/context";
 import { getClicksForUrl } from "@/db/apiClicks";
 import { deleteUrl, getUrl } from "@/db/apiUrls";
 import useFetch from "@/hooks/use-fetch";
-import { LinkIcon } from "lucide-react";
+import { Copy, Download, LinkIcon, Trash } from "lucide-react";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { BarLoader } from "react-spinners";
+import { BarLoader, BeatLoader } from "react-spinners";
 
 const Link = () => {
+  const downloadImage = () => {
+    if (url?.qr && url?.title) {
+      const imageUrl = url.qr;
+      const fileName = url.title;
+
+      const anchor = document.createElement("a");
+      anchor.href = imageUrl;
+      anchor.download = fileName;
+
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+    }
+  };
   const { id } = useParams();
   const { user } = UrlState();
   const navigate = useNavigate();
@@ -35,6 +50,13 @@ const Link = () => {
   if (error) {
     navigate("/dashboard");
   }
+
+  const handleDelete = async () => {
+    if (url?.id) {
+      await fnDelete();
+      navigate("/dashboard"); // Redirect to dashboard after deletion
+    }
+  };
 
   let link = "";
   if (url) {
@@ -69,6 +91,35 @@ const Link = () => {
           <span className="flex items-end font-extralight text-sm">
             {new Date(url?.created_at).toLocaleString()}
           </span>
+          <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              onClick={() =>
+                navigator.clipboard.writeText(
+                  `https://trimrr.in/${
+                    url.custom_url ? url.custom_url : url.short_url
+                  }`
+                )
+              }
+            >
+              <Copy />
+            </Button>
+            <Button variant="ghost" onClick={downloadImage}>
+              <Download />
+            </Button>
+            <Button variant="ghost" onClick={handleDelete}>
+              {loadingDelete ? (
+                <BeatLoader size={5} color="white" />
+              ) : (
+                <Trash />
+              )}
+            </Button>
+          </div>
+          <img
+            src={url?.qr}
+            className="w-full self-center sm:self-start ring ring-blue-500 p-1 object-contain"
+            alt="qr code"
+          />
         </div>
         <div className="sm:w-3/5"></div>
       </div>
