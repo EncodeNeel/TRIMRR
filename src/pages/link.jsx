@@ -77,11 +77,11 @@ const Link = () => {
             {url?.title}
           </span>
           <a
-            href={`http://localhost:5173/${link}`}
+            href={`https://trimrr-roan.vercel.app/${link}`}
             target="_blank"
             className="text-3xl sm:text-4xl text-blue-400 font-bold hover:underline cursor-pointer"
           >
-            http://localhost:5173/{link}
+            https://trimrr-roan.vercel.app/{link}
           </a>
           <a
             href={url?.original_url}
@@ -99,7 +99,7 @@ const Link = () => {
               variant="ghost"
               onClick={() =>
                 navigator.clipboard.writeText(
-                  `http://localhost:5173/${
+                  `https://trimrr-roan.vercel.app/${
                     url.custom_url ? url.custom_url : url.short_url
                   }`
                 )
