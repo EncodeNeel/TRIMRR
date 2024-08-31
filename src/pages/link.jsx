@@ -77,11 +77,11 @@ const Link = () => {
             {url?.title}
           </span>
           <a
-            href={`https://trimrr.in/${link}`}
+            href={`http://localhost:5173/${link}`}
             target="_blank"
             className="text-3xl sm:text-4xl text-blue-400 font-bold hover:underline cursor-pointer"
           >
-            https://trimrr.in/{link}
+            http://localhost:5173/{link}
           </a>
           <a
             href={url?.original_url}
@@ -99,7 +99,7 @@ const Link = () => {
               variant="ghost"
               onClick={() =>
                 navigator.clipboard.writeText(
-                  `https://trimrr.in/${
+                  `http://localhost:5173/${
                     url.custom_url ? url.custom_url : url.short_url
                   }`
                 )
